@@ -426,9 +426,7 @@ public class RegressionToyWorld extends javax.swing.JFrame
         final JFXPanel fxPanel = new JFXPanel();
         Platform.runLater(() ->
         {
-//            fxPanel.setScene(new Scene(new BorderPane(Plot.regression(rData, (double value) -> truth.f(value)))));
-            fxPanel.setScene(new Scene(new BorderPane(Plot.regression(rData, (double value) -> value > 0 ? -1 : 0.0))));
-//            fxPanel.setScene(new Scene(new BorderPane(Plot.regression(rData, (double value) -> Math.round(value)*1.0))));
+            fxPanel.setScene(new Scene(new BorderPane(Plot.regression(rData, (double value) -> truth.f(value)))));
         });
         
         jTabbedPane.add("Raw Data", fxPanel);
