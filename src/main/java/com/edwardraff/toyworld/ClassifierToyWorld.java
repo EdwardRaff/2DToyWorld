@@ -16,6 +16,8 @@
  */
 package com.edwardraff.toyworld;
 
+import com.edwardraff.jsatfx.ClassificationPlot;
+import com.edwardraff.jsatfx.Plot;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.io.*;
@@ -26,6 +28,10 @@ import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javafx.application.Platform;
+import javafx.embed.swing.JFXPanel;
+import javafx.scene.Scene;
+import javafx.scene.layout.BorderPane;
 import javax.swing.*;
 import jsat.*;
 import jsat.classifiers.*;
@@ -43,8 +49,6 @@ import jsat.classifiers.trees.*;
 import jsat.datatransform.*;
 import jsat.distributions.kernels.RBFKernel;
 import jsat.distributions.multivariate.MetricKDE;
-import jsat.graphing.CategoryPlot;
-import jsat.graphing.ClassificationPlot;
 import jsat.guitool.ParameterPanel;
 import jsat.linear.*;
 import static jsat.linear.DenseVector.toDenseVec;
@@ -219,12 +223,17 @@ public class ClassifierToyWorld extends javax.swing.JFrame
                             return;
                         }
                         
-                        ClassificationPlot cp = new ClassificationPlot(dataSet, finalClassifier);
-                        cp.scaleCords(1.1);
+                        ClassificationPlot cp = Plot.classification(dataSet, finalClassifier);
                         cp.setResolution(plotResolution);
                         cp.setHardBoundaries(jCheckBoxMenuItemHardBoundaries.isSelected());
                         plotList.add(cp);
-                        centerTabbed.add(prefix + name, cp);
+                        
+                        final JFXPanel fxPanel = new JFXPanel();
+                        Platform.runLater(() ->
+                        {
+                            fxPanel.setScene(new Scene(new BorderPane(cp)));
+                        });
+                        centerTabbed.add(prefix + name, fxPanel);
                     });
                 }
                 catch (InterruptedException ex)
@@ -564,15 +573,21 @@ public class ClassifierToyWorld extends javax.swing.JFrame
             dataSet = tmpDataSet;
             dataSet.applyTransform(new LinearTransform(dataSet));
             
-            CategoryPlot catPlot = new CategoryPlot(dataSet);
-            catPlot.scaleCords(1.1);
+            final JFXPanel fxPanel = new JFXPanel();
+            Platform.runLater(() ->
+            {
+                fxPanel.setScene(new Scene(new BorderPane(Plot.scatterC(dataSet))));
+            });
+            
             if(centerTabbed != null)
             {
                 remove(centerTabbed);
                 plotList.clear();
             }
+            
             centerTabbed = new JTabbedPane();
-            centerTabbed.add("Original Data Set", catPlot);
+            centerTabbed.add("Original Data Set", fxPanel);
+
             add(centerTabbed, BorderLayout.CENTER);
             getContentPane().validate();
             getContentPane().repaint();

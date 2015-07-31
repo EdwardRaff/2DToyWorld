@@ -19,9 +19,14 @@
 
     <dependencies>
         <dependency>
-            <groupId>jsat</groupId>
-            <artifactId>jsat</artifactId>
-            <version>LATEST</version>
+            <groupId>com.edwardraff</groupId>
+            <artifactId>JSAT</artifactId>
+            <version>[0.0.1,)</version>
+        </dependency>
+        <dependency>
+            <groupId>com.edwardraff</groupId>
+            <artifactId>JSATFX</artifactId>
+            <version>[0.0.1,)</version>
         </dependency>
     </dependencies>
     <build>

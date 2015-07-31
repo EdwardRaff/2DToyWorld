@@ -16,6 +16,7 @@
  */
 package com.edwardraff.toyworld;
 
+import com.edwardraff.jsatfx.Plot;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.io.*;
@@ -37,6 +38,10 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.atomic.AtomicInteger;
+import javafx.application.Platform;
+import javafx.embed.swing.JFXPanel;
+import javafx.scene.Scene;
+import javafx.scene.layout.BorderPane;
 import javax.swing.*;
 import jsat.*;
 import jsat.classifiers.ClassificationDataSet;
@@ -53,9 +58,7 @@ import jsat.clustering.hierarchical.DivisiveLocalClusterer;
 import jsat.clustering.hierarchical.PriorityHAC;
 import jsat.clustering.kmeans.*;
 import jsat.datatransform.LinearTransform;
-import jsat.graphing.*;
 import jsat.guitool.ParameterPanel;
-import jsat.linear.Vec;
 import jsat.linear.distancemetrics.EuclideanDistance;
 import jsat.linear.distancemetrics.NormalizedEuclideanDistance;
 import jsat.linear.vectorcollection.VectorArray;
@@ -118,13 +121,15 @@ public class ClusterToyWorld extends javax.swing.JFrame
                 clustering.addDataPoint(dataSet.getDataPoint(i).getNumericalValues(), noCats, kSize-1);
         }
 
-
-        final CategoryPlot plot = new CategoryPlot(clustering);
-        plot.scaleCords(1.1);
         
         SwingUtilities.invokeLater(() ->
         {
-            centerTabbed.add(fullName, plot);
+            final JFXPanel fxPanel = new JFXPanel();
+            Platform.runLater(() ->
+            {
+                fxPanel.setScene(new Scene(new BorderPane(Plot.scatterC(clustering))));
+            });
+            centerTabbed.add(fullName, fxPanel);
             centerTabbed.setSelectedIndex(centerTabbed.getTabCount() - 1);
             getContentPane().validate();
             getContentPane().repaint();
@@ -403,15 +408,16 @@ public class ClusterToyWorld extends javax.swing.JFrame
             
             dataSet = tmpDataSet;
             dataSet.applyTransform(new LinearTransform(dataSet, 0, 1));
-            Vec xVals = dataSet.getNumericColumn(0);
-            Vec yVals = dataSet.getNumericColumn(1);
             
-            ScatterPlot scatter = new ScatterPlot(xVals, yVals);
-            scatter.scaleCords(1.1);
+            final JFXPanel fxPanel = new JFXPanel();
+            Platform.runLater(() ->
+            {
+                fxPanel.setScene(new Scene(new BorderPane(Plot.scatter(dataSet))));
+            });
             if(centerTabbed != null)
                 remove(centerTabbed);
             centerTabbed = new JTabbedPane();
-            centerTabbed.add("Original Data Set", scatter);
+            centerTabbed.add("Original Data Set", fxPanel);
             add(centerTabbed, BorderLayout.CENTER);
             getContentPane().validate();
             getContentPane().repaint();

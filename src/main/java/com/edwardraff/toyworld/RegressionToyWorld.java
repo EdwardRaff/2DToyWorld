@@ -16,6 +16,7 @@
  */
 package com.edwardraff.toyworld;
 
+import com.edwardraff.jsatfx.Plot;
 import static java.lang.Math.*;
 import java.awt.BorderLayout;
 import java.awt.FlowLayout;
@@ -28,8 +29,13 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.function.DoubleFunction;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javafx.application.Platform;
+import javafx.embed.swing.JFXPanel;
+import javafx.scene.Scene;
+import javafx.scene.layout.BorderPane;
 import javax.swing.*;
 import jsat.classifiers.CategoricalData;
 import jsat.classifiers.DataPoint;
@@ -43,7 +49,6 @@ import jsat.distributions.*;
 import jsat.distributions.empirical.kernelfunc.EpanechnikovKF;
 import jsat.distributions.kernels.RBFKernel;
 import jsat.distributions.multivariate.MetricKDE;
-import jsat.graphing.ScatterPlot;
 import jsat.guitool.ParameterPanel;
 import jsat.linear.DenseVector;
 import jsat.linear.distancemetrics.EuclideanDistance;
@@ -305,8 +310,12 @@ public class RegressionToyWorld extends javax.swing.JFrame
                     {
                         regressorToUse.train(rData, execService);
 
-                        ScatterPlot plot = new ScatterPlotTruth(rData.getNumericColumn(0), rData.getTargetValues(), regressorToUse, truth);
-                        jTabbedPane.add(name, plot);
+                        final JFXPanel fxPanel = new JFXPanel();
+                        Platform.runLater(() ->
+                        {
+                            fxPanel.setScene(new Scene(new BorderPane(Plot.regression(rData, regressorToUse)  )));
+                        });
+                        jTabbedPane.add(name, fxPanel);
                     });
                 }
                 catch (InterruptedException ex)
@@ -413,7 +422,16 @@ public class RegressionToyWorld extends javax.swing.JFrame
         if (jTabbedPane != null)
             remove(jTabbedPane);
         jTabbedPane = new JTabbedPane();
-        jTabbedPane.add("Raw Data", new ScatterPlotTruth(rData.getNumericColumn(0), rData.getTargetValues(), null, truth));
+        
+        final JFXPanel fxPanel = new JFXPanel();
+        Platform.runLater(() ->
+        {
+//            fxPanel.setScene(new Scene(new BorderPane(Plot.regression(rData, (double value) -> truth.f(value)))));
+            fxPanel.setScene(new Scene(new BorderPane(Plot.regression(rData, (double value) -> value > 0 ? -1 : 0.0))));
+//            fxPanel.setScene(new Scene(new BorderPane(Plot.regression(rData, (double value) -> Math.round(value)*1.0))));
+        });
+        
+        jTabbedPane.add("Raw Data", fxPanel);
         add(jTabbedPane, BorderLayout.CENTER);
         repaint();
         validate();
