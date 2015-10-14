@@ -18,6 +18,7 @@ package com.edwardraff.toyworld;
 
 import com.edwardraff.jsatfx.ClassificationPlot;
 import com.edwardraff.jsatfx.Plot;
+import com.edwardraff.jsatfx.swing.ParameterPanel;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.io.*;
@@ -49,7 +50,6 @@ import jsat.classifiers.trees.*;
 import jsat.datatransform.*;
 import jsat.distributions.kernels.RBFKernel;
 import jsat.distributions.multivariate.MetricKDE;
-import jsat.guitool.ParameterPanel;
 import jsat.linear.*;
 import static jsat.linear.DenseVector.toDenseVec;
 import jsat.parameters.*;

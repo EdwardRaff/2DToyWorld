@@ -17,6 +17,7 @@
 package com.edwardraff.toyworld;
 
 import com.edwardraff.jsatfx.Plot;
+import com.edwardraff.jsatfx.swing.ParameterPanel;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.io.*;
@@ -58,7 +59,6 @@ import jsat.clustering.hierarchical.DivisiveLocalClusterer;
 import jsat.clustering.hierarchical.PriorityHAC;
 import jsat.clustering.kmeans.*;
 import jsat.datatransform.LinearTransform;
-import jsat.guitool.ParameterPanel;
 import jsat.linear.distancemetrics.EuclideanDistance;
 import jsat.linear.distancemetrics.NormalizedEuclideanDistance;
 import jsat.linear.vectorcollection.VectorArray;

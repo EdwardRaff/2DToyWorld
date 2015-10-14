@@ -17,6 +17,7 @@
 package com.edwardraff.toyworld;
 
 import com.edwardraff.jsatfx.Plot;
+import com.edwardraff.jsatfx.swing.ParameterPanel;
 import static java.lang.Math.*;
 import java.awt.BorderLayout;
 import java.awt.FlowLayout;
@@ -29,7 +30,6 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.atomic.AtomicInteger;
-import java.util.function.DoubleFunction;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.application.Platform;
@@ -49,7 +49,6 @@ import jsat.distributions.*;
 import jsat.distributions.empirical.kernelfunc.EpanechnikovKF;
 import jsat.distributions.kernels.RBFKernel;
 import jsat.distributions.multivariate.MetricKDE;
-import jsat.guitool.ParameterPanel;
 import jsat.linear.DenseVector;
 import jsat.linear.distancemetrics.EuclideanDistance;
 import jsat.linear.vectorcollection.DefaultVectorCollectionFactory;
